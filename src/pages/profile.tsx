@@ -61,6 +61,7 @@ const Profile = () => {
   if (!isError) {
     return (
       <>
+        <Link href="/">sdfsf</Link>
         <p>{profile?.user.username}</p>
         <p>{profile?.user.id}</p>
         <Link href="/edit/profile">edit profile</Link>
