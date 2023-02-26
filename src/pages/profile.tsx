@@ -1,8 +1,9 @@
 import { ReactEventHandler, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { NextPage } from "next";
 
 type Message = {
   id: string;
@@ -45,7 +46,7 @@ type ReplyApiResponse = {
   };
 };
 
-const Profile = () => {
+const Profile: NextPage = () => {
   const [hasUsername, setHasUsername] = useState(true);
   const router = useRouter();
 
@@ -56,16 +57,20 @@ const Profile = () => {
   const queryClient = useQueryClient();
 
   const [replyErrMsg, setReplyErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState("");
 
   const {
     data: profile,
     isLoading,
     isError,
-  } = useQuery<Profile, any>({
+  } = useQuery<Profile, AxiosError>({
     queryKey: ["profile"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/profile", { withCredentials: true });
-      const data = response.data as Profile;
+      const response = await axios.get<Profile>("http://localhost:5000/api/v1/profile", {
+        withCredentials: true,
+        params: { message: "include" },
+      });
+      const data = response.data;
       return data;
     },
     onSuccess: (profile) => {
@@ -76,11 +81,11 @@ const Profile = () => {
     },
 
     onError: (err) => {
-      console.log(err?.request?.status);
-      if (err?.request?.status === 401) {
+      if (err.request.status === 401) {
         router.push("/login");
+      } else {
+        setErrMsg("Something went wrong please try again later");
       }
-      console.log(err);
     },
     retry: false,
     refetchOnWindowFocus: false,
@@ -94,7 +99,7 @@ const Profile = () => {
     mutate: sendReply,
   } = useMutation<ReplyApiResponse, any, MutationFnParams>({
     mutationFn: async (data: MutationFnParams) => {
-      const response = await axios.post(`http://localhost:5000/api/v1/reply/${data.messageId}`, { reply: data.replyMsg }, { withCredentials: true });
+      const response = await axios.post<ReplyApiResponse>(`http://localhost:5000/api/v1/reply/${data.messageId}`, { reply: data.replyMsg }, { withCredentials: true });
       return response.data;
     },
 
@@ -115,6 +120,7 @@ const Profile = () => {
           // oldProfile.user.messages[msgIndex] = temp;
 
           console.log(oldProfile);
+          setReply(undefined);
           return oldProfile;
         }
 
@@ -125,7 +131,7 @@ const Profile = () => {
     onError: (err) => {
       if (err?.request?.status === 400) {
         setReplyErrMsg("Can't reply message more than 5 times");
-      } else if (err?.reguest.status === 401) {
+      } else if (err?.request?.status === 401) {
         router.push("/login");
       } else {
         setReplyErrMsg("Something went wrong please try again later");
@@ -152,6 +158,9 @@ const Profile = () => {
     return <div>LOADING ....</div>;
   }
 
+  if (errMsg) {
+    return <div>{errMsg}</div>;
+  }
   if (!hasUsername) {
     return (
       <div>
@@ -244,6 +253,8 @@ const Profile = () => {
       </>
     );
   }
+
+  return null;
 };
 
 export default Profile;

@@ -20,13 +20,14 @@ const EditProfile: NextPage = () => {
     return queryClient.getQueryData<ProfileType>(["edit", "profile"]);
   });
 
-  const [errMsg, setErrMsg] = useState("");
+  const [getProfileErrMsg, setGetProfileErrMsg] = useState("");
+  const [updateProfileErrMsg, setUpdateProfileErrMsg] = useState("");
 
   const { data, isLoading, isError } = useQuery<ProfileType, any>({
     queryKey: ["edit", "profile"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/profile", { withCredentials: true });
-      const data = response.data as ProfileType;
+      const response = await axios.get<ProfileType>("http://localhost:5000/api/v1/profile", { withCredentials: true });
+      const data = response.data;
       return data;
     },
     onSuccess: (data) => {
@@ -41,6 +42,8 @@ const EditProfile: NextPage = () => {
       console.log(err?.request?.status);
       if (err?.request?.status === 401) {
         router.push("/login");
+      } else {
+        setGetProfileErrMsg("Something went wrong please try again later");
       }
       console.log(err);
     },
@@ -67,9 +70,9 @@ const EditProfile: NextPage = () => {
     onError: (err) => {
       // Do something with this error...
       if (err.request.status === 400) {
-        setErrMsg("Name is already exist");
+        setUpdateProfileErrMsg("Name is already exist");
       } else {
-        setErrMsg("Something went wrong please try again later");
+        setUpdateProfileErrMsg("Something went wrong please try again later");
       }
     },
   });
@@ -82,20 +85,14 @@ const EditProfile: NextPage = () => {
         },
       });
     }
-    // const user = queryClient.getQueryData(["edit", "profile"]);
-
-    // if (profile) {
-    //   queryClient.setQueryData(["edit", "profile"], {
-    //     user: {
-    //       ...profile.user,
-    //       username: e.target.value,
-    //     },
-    //   });
-    // }
   };
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (getProfileErrMsg) {
+    return <div>{getProfileErrMsg}</div>;
   }
 
   if (!isError) {
@@ -121,7 +118,7 @@ const EditProfile: NextPage = () => {
             </button>
           </div>
 
-          <h1>{errMsg}</h1>
+          <h1>{updateProfileErrMsg}</h1>
         </div>
       </>
     );
