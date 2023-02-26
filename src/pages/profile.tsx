@@ -55,6 +55,8 @@ const Profile = () => {
 
   const queryClient = useQueryClient();
 
+  const [replyErrMsg, setReplyErrMsg] = useState("");
+
   const {
     data: profile,
     isLoading,
@@ -108,7 +110,7 @@ const Profile = () => {
           console.log(msgIndex);
           const temp = messages[msgIndex];
 
-          temp.replies.unshift({ reply_id: data.reply.id, reply: data.reply.reply });
+          temp.replies.push({ reply_id: data.reply.id, reply: data.reply.reply });
 
           // oldProfile.user.messages[msgIndex] = temp;
 
@@ -119,14 +121,25 @@ const Profile = () => {
         return undefined;
       });
     },
+
+    onError: (err) => {
+      if (err?.request?.status === 400) {
+        setReplyErrMsg("Can't reply message more than 5 times");
+      } else if (err?.reguest.status === 401) {
+        router.push("/login");
+      } else {
+        setReplyErrMsg("Something went wrong please try again later");
+      }
+    },
   });
 
   const handleReplyClick = (e: React.MouseEvent<HTMLButtonElement>, data: ReplyState) => {
-    console.log(data);
     setReply(data);
+    setReplyErrMsg("");
   };
 
   const handleReplyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReplyErrMsg("");
     if (reply) {
       setReply({
         ...reply,
@@ -210,13 +223,20 @@ const Profile = () => {
 
                 <button
                   onClick={() => {
-                    console.log(reply);
-                    sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
+                    console.log(reply.replyMsg.length);
+                    if (reply.replyMsg.length > 255) {
+                      setReplyErrMsg("Cannot exceed more than 255 characters");
+                    } else {
+                      sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
+                    }
+
                     // setReply(undefined);
                   }}
                 >
                   Save
                 </button>
+
+                <h1 style={{ color: "white" }}>{replyErrMsg}</h1>
               </div>
             </>
           ) : null}
