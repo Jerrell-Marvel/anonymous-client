@@ -98,26 +98,25 @@ const Profile = () => {
 
     onSuccess: (data) => {
       console.log(data);
-      queryClient.setQueryData<Profile>(["profile"], (oldProfile) => {
+      queryClient.setQueryData<Profile | undefined>(["profile"], (oldProfile) => {
         if (oldProfile) {
-          const tempMessages = [...oldProfile.user.messages];
-          console.log(tempMessages, data.reply.message_id);
-          const msgIndex = tempMessages.findIndex((message) => {
+          const messages = oldProfile.user.messages;
+          console.log(messages, data.reply.message_id);
+          const msgIndex = messages.findIndex((message) => {
             return message.id == data.reply.message_id;
           });
           console.log(msgIndex);
-          const temp = {
-            ...tempMessages[msgIndex],
-          };
+          const temp = messages[msgIndex];
+
           temp.replies.unshift({ reply_id: data.reply.id, reply: data.reply.reply });
 
-          oldProfile.user.messages[msgIndex] = temp;
+          // oldProfile.user.messages[msgIndex] = temp;
 
           console.log(oldProfile);
           return oldProfile;
         }
 
-        return oldProfile!;
+        return undefined;
       });
     },
   });
