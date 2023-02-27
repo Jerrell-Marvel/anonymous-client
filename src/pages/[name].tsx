@@ -37,6 +37,8 @@ type SendMessageApiResponse = {
 
 const MessagePage: NextPage<MessagePageProps> = (data) => {
   const [profile, setProfile] = useState<Profile>(data);
+  const [sendMsgErr, setSendMsgErr] = useState("");
+
   const { mutate: sendMessage } = useMutation<SendMessageApiResponse, AxiosError, string>({
     mutationFn: async (id) => {
       const response = await axios.post<SendMessageApiResponse>(`http://localhost:5000/api/v1/message/${id}`, { message });
@@ -66,7 +68,13 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
             messages: tempMessages,
           },
         });
+
+        setMessage("");
       }
+    },
+
+    onError: (err) => {
+      setSendMsgErr("Something went wrong please try again later");
     },
   });
 
@@ -76,6 +84,7 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
   }
 
   const messageOnChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSendMsgErr("");
     setMessage(e.target.value);
   };
 
@@ -101,7 +110,7 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
         >
           SEND
         </button>
-
+        <span>{sendMsgErr}</span>
         <div>
           {profile?.user?.messages.map((message) => {
             return (
