@@ -18,6 +18,22 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   const router = useRouter();
 
   const [username, setUsername] = useState("");
+  useEffect(() => {
+    if (router.isReady) {
+      const { q } = router.query;
+      if (q) {
+        setUsername(q as string);
+
+        if (usersData.length === 0) {
+          setSearchMsg("Cannot found user");
+        }
+      } else if (!q) {
+        setSearchMsg("Find people here");
+      }
+    }
+  }, [router.isReady]);
+
+  const [searchMsg, setSearchMsg] = useState("");
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -26,29 +42,19 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   const [usersData, setUsersData] = useState(users);
 
   const onClickHandler = async () => {
+    setSearchMsg("");
     const response = await axios.get<SearchProps>("http://localhost:5000/api/v1/users", { params: { q: username } });
     const data = response.data;
+
+    if (data.users.length === 0) {
+      setSearchMsg("Cannot found user");
+    }
     setUsersData(data.users);
     router.push(`/search?q=${username}`, undefined, { shallow: true });
   };
 
   return (
     <div>
-      {usersData.map((user) => {
-        return (
-          <div key={user.id}>
-            <Link
-              href={`${user.username}`}
-              legacyBehavior
-            >
-              <a>
-                <h1>{user.username}</h1>
-                <h2>{user.id}</h2>
-              </a>
-            </Link>
-          </div>
-        );
-      })}
       <p>Search</p>
       <input
         type="text"
@@ -64,6 +70,24 @@ const Search: NextPage<SearchProps> = ({ users }) => {
       >
         Search
       </button>
+
+      {searchMsg ? <div>{searchMsg}</div> : null}
+
+      {usersData.map((user) => {
+        return (
+          <div key={user.id}>
+            <Link
+              href={`${user.username}`}
+              legacyBehavior
+            >
+              <a>
+                <h1>{user.username}</h1>
+                <h2>{user.id}</h2>
+              </a>
+            </Link>
+          </div>
+        );
+      })}
     </div>
   );
 };
