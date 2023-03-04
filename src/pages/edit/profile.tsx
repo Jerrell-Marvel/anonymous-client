@@ -16,14 +16,20 @@ type ProfileType = {
 const EditProfile: NextPage = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [profile, setProfile] = useState<ProfileType | undefined>(() => {
-    return queryClient.getQueryData<ProfileType>(["edit", "profile"]);
-  });
+  // const [profile, setProfile] = useState<ProfileType | undefined>(() => {
+  //   return queryClient.getQueryData<ProfileType>(["edit", "profile"]);
+  // });
 
   const [getProfileErrMsg, setGetProfileErrMsg] = useState("");
   const [updateProfileErrMsg, setUpdateProfileErrMsg] = useState("");
 
-  const { data, isLoading, isError } = useQuery<ProfileType, any>({
+  const [controlledProfile, setControlledProfile] = useState<{ username: string }>({ username: "" });
+
+  const {
+    data: profile,
+    isLoading,
+    isError,
+  } = useQuery<ProfileType, any>({
     queryKey: ["edit", "profile"],
     queryFn: async () => {
       const response = await axios.get<ProfileType>("http://localhost:5000/api/v1/profile", { withCredentials: true });
@@ -32,7 +38,11 @@ const EditProfile: NextPage = () => {
     },
     onSuccess: (data) => {
       console.log(data);
-      setProfile(data);
+      // setProfile(data);
+      if (data.user.username) {
+        setControlledProfile({ username: data.user.username });
+      }
+
       if (!data?.user.username) {
         // setHasUsername(false);
       }
@@ -55,7 +65,7 @@ const EditProfile: NextPage = () => {
       const response = await axios.post<{ success: boolean }>(
         "http://localhost:5000/api/v1/profile",
         {
-          username: profile?.user.username,
+          username: controlledProfile.username,
         },
         { withCredentials: true }
       );
@@ -78,13 +88,17 @@ const EditProfile: NextPage = () => {
   });
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (profile) {
-      setProfile({
-        user: {
-          ...profile.user,
-          username: e.target.value,
-        },
-      });
+      // setProfile({
+      //   user: {
+      //     ...profile.user,
+      //     username: e.target.value,
+      //   },
+      // });
     }
+
+    setControlledProfile({
+      username: e.target.value,
+    });
   };
 
   if (isLoading) {
@@ -103,7 +117,7 @@ const EditProfile: NextPage = () => {
             <input
               type="text"
               placeholder="name"
-              value={profile?.user.username}
+              value={controlledProfile.username}
               onChange={(e) => {
                 onChangeHandler(e);
               }}
