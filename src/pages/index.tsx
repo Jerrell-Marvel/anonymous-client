@@ -25,7 +25,7 @@ export default function Home() {
         />
       </Head>
       <main>
-        <h1>HOME PAGE</h1>
+        <h1 className="text-4xl">HOME PAGE</h1>
       </main>
     </>
   );
