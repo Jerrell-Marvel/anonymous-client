@@ -220,30 +220,28 @@ const Profile: NextPage = () => {
 
               <div style={{ position: "absolute", top: "0", left: "0", backgroundColor: "black" }}>
                 <h2 style={{ fontSize: "20px", color: "white", textAlign: "center" }}>{reply.message}</h2>
-                <input
-                  type="text"
-                  placeholder="Reply something here"
-                  value={reply.replyMsg}
-                  style={{ backgroundColor: "white", width: "300px", height: "100px", margin: "auto", display: "block" }}
-                  onChange={(e) => {
-                    handleReplyChange(e);
-                  }}
-                />
 
-                <button
-                  onClick={() => {
-                    console.log(reply.replyMsg.length);
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
                     if (reply.replyMsg.length > 255) {
                       setReplyErrMsg("Cannot exceed more than 255 characters");
                     } else {
                       sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
                     }
-
-                    // setReply(undefined);
                   }}
                 >
-                  Save
-                </button>
+                  <input
+                    type="text"
+                    placeholder="Reply something here"
+                    value={reply.replyMsg}
+                    style={{ backgroundColor: "white", width: "300px", height: "100px", margin: "auto", display: "block" }}
+                    onChange={(e) => {
+                      handleReplyChange(e);
+                    }}
+                  />
+                  <button type="submit">Save</button>
+                </form>
 
                 <h1 style={{ color: "white" }}>{replyErrMsg}</h1>
               </div>
