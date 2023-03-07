@@ -94,22 +94,24 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
         <p>{profile?.user?.username}</p>
         <p>{profile?.user?.id}</p>
 
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => {
-            messageOnChangeHandler(e);
-          }}
-        />
-        <button
-          onClick={() => {
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
             if (profile.user) {
               sendMessage(profile.user.id);
             }
           }}
         >
-          SEND
-        </button>
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => {
+              messageOnChangeHandler(e);
+            }}
+          />
+          <button type="submit">SEND</button>
+        </form>
+
         <span>{sendMsgErr}</span>
         <div>
           {profile?.user?.messages.map((message) => {

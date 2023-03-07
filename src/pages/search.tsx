@@ -41,7 +41,7 @@ const Search: NextPage<SearchProps> = ({ users }) => {
 
   const [usersData, setUsersData] = useState(users);
 
-  const onClickHandler = async () => {
+  const onSubmitHandler = async () => {
     setSearchMsg("");
     const response = await axios.get<SearchProps>("http://localhost:5000/api/v1/users", { params: { q: username } });
     const data = response.data;
@@ -56,20 +56,21 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   return (
     <div>
       <p>Search</p>
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => {
-          onChangeHandler(e);
-        }}
-      />
-      <button
-        onClick={() => {
-          onClickHandler();
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmitHandler();
         }}
       >
-        Search
-      </button>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => {
+            onChangeHandler(e);
+          }}
+        />
+        <button type="submit">Search</button>
+      </form>
 
       {searchMsg ? <div>{searchMsg}</div> : null}
 
