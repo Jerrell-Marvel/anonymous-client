@@ -11,8 +11,13 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Navbar />
-        <Component {...pageProps} />
+        {/* <Navbar /> */}
+        <div className="min-h-screen bg-slate-200">
+          <div className="max-w-3xl mx-auto">
+            <Component {...pageProps} />
+          </div>
+        </div>
+
         <ReactQueryDevtools />
       </QueryClientProvider>
     </>

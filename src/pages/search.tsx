@@ -19,19 +19,21 @@ const Search: NextPage<SearchProps> = ({ users }) => {
 
   const [username, setUsername] = useState("");
   useEffect(() => {
-    if (router.isReady) {
-      const { q } = router.query;
-      if (q) {
-        setUsername(q as string);
-
-        if (usersData.length === 0) {
-          setSearchMsg("Cannot found user");
-        }
-      } else if (!q) {
-        setSearchMsg("Find people here");
-      }
-    }
+    // if (router.isReady) {
+    //   const { q } = router.query;
+    //   if (q) {
+    //     setUsername(q as string);
+    //     if (usersData.length === 0) {
+    //       setSearchMsg("Cannot found user");
+    //     }
+    //   } else if (!q) {
+    //     setSearchMsg("Find people here");
+    //   }
+    // }
   }, [router.isReady]);
+
+  const { q } = router.query;
+  console.log(q);
 
   const [searchMsg, setSearchMsg] = useState("");
 
@@ -54,42 +56,54 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   };
 
   return (
-    <div>
-      <p>Search</p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmitHandler();
-        }}
-      >
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => {
-            onChangeHandler(e);
+    <>
+      <div className="bg-white p-6 rounded-md">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmitHandler();
           }}
-        />
-        <button type="submit">Search</button>
-      </form>
+          className="flex justify-center gap-2 items-center w-full"
+        >
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => {
+              onChangeHandler(e);
+            }}
+            className="bg-slate-200 rounded-sm px-2 py-1 w-1/2"
+            placeholder="Search"
+          />
+          <button
+            type="submit"
+            className="bg-orange-400 px-5 py-1 rounded-full text-white"
+          >
+            submit
+          </button>
+        </form>
 
-      {searchMsg ? <div>{searchMsg}</div> : null}
+        {searchMsg ? <div className="text-center mt-4">{searchMsg}</div> : null}
+      </div>
 
-      {usersData.map((user) => {
-        return (
-          <div key={user.id}>
-            <Link
-              href={`${user.username}`}
-              legacyBehavior
+      <ul className="max-w-3xl mx-auto flex flex-col mt-4 gap-2">
+        {usersData.map((user) => {
+          return (
+            <li
+              key={user.id}
+              className="flex justify-between bg-white p-6 rounded-md"
             >
-              <a>
-                <h1>{user.username}</h1>
-                <h2>{user.id}</h2>
-              </a>
-            </Link>
-          </div>
-        );
-      })}
-    </div>
+              <p>{user.username}</p>
+              <Link
+                href={`/${user.username}`}
+                className=""
+              >
+                Send message
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 };
 

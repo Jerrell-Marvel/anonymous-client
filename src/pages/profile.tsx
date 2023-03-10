@@ -173,81 +173,87 @@ const Profile: NextPage = () => {
   if (!isError) {
     return (
       <>
-        <div style={{ maxWidth: "768px", backgroundColor: "salmon", margin: "auto" }}>
-          <Link href="/">sdfsf</Link>
-          <p>{profile?.user.username}</p>
-          <p>{profile?.user.id}</p>
+        <div className="bg-white p-6 text-center rounded-md">
+          <h2 className="text-5xl font-bold">{profile?.user.username}</h2>
           <Link href="/edit/profile">edit profile</Link>
-          <p>Share your link</p>
-          <p>{"https://domain/" + profile?.user.username}</p>
-          <div>
-            {profile?.user.messages.map((message) => {
-              return (
-                <div key={message.id}>
-                  <h2 key={message.id}>{message.message}</h2>
-                  <button
-                    onClick={(e) => {
-                      handleReplyClick(e, { messageId: message.id, message: message.message, replyMsg: "" });
-                    }}
-                  >
-                    Reply
-                  </button>
-                  {message.replies.map((reply) => {
-                    return (
-                      <div
-                        key={reply.reply_id}
-                        style={{ marginLeft: "10px", display: "flex", gap: "20px" }}
-                      >
-                        <h3>{reply.reply}</h3>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
+          <p className="text-2xl">Share your link</p>
+          <Link
+            href={`/${profile?.user.username}`}
+            className="text-3xl text-red-500"
+          >
+            {"https://domain/" + profile?.user.username}
+          </Link>
+        </div>
 
-          {reply ? (
-            <>
+        <div className="flex-col gap-4 flex mt-4">
+          {profile?.user.messages.map((message) => {
+            return (
               <div
-                onClick={(e) => {
-                  setReply(undefined);
-                }}
-                ref={backdropRef}
-                style={{ position: "absolute", backgroundColor: "black", top: "0", left: "0", bottom: "0", right: "0", opacity: "0.5" }}
-                className="reply-backdrop"
-              ></div>
+                key={message.id}
+                className="bg-white p-6 rounded-md"
+              >
+                <div
+                  key={message.id}
+                  className="border-l-2 border-slate-400 pl-3"
+                >
+                  {message.message}
+                </div>
 
-              <div style={{ position: "absolute", top: "0", left: "0", backgroundColor: "black" }}>
-                <h2 style={{ fontSize: "20px", color: "white", textAlign: "center" }}>{reply.message}</h2>
+                {message.replies.map((reply) => {
+                  return <div key={reply.reply_id}>{reply.reply}</div>;
+                })}
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (reply.replyMsg.length > 255) {
-                      setReplyErrMsg("Cannot exceed more than 255 characters");
-                    } else {
-                      sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
-                    }
+                <button
+                  onClick={(e) => {
+                    handleReplyClick(e, { messageId: message.id, message: message.message, replyMsg: "" });
                   }}
                 >
-                  <input
-                    type="text"
-                    placeholder="Reply something here"
-                    value={reply.replyMsg}
-                    style={{ backgroundColor: "white", width: "300px", height: "100px", margin: "auto", display: "block" }}
-                    onChange={(e) => {
-                      handleReplyChange(e);
-                    }}
-                  />
-                  <button type="submit">Save</button>
-                </form>
-
-                <h1 style={{ color: "white" }}>{replyErrMsg}</h1>
+                  Reply
+                </button>
               </div>
-            </>
-          ) : null}
+            );
+          })}
         </div>
+
+        {reply ? (
+          <>
+            <div
+              onClick={(e) => {
+                setReply(undefined);
+              }}
+              ref={backdropRef}
+              className="top-0 left-0 h-screen w-full fixed bg-slate-500 opacity-50"
+            ></div>
+
+            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 p-6 w-1/2">
+              <div className="border-l-2 border-slate-400 pl-3">{reply.message}</div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (reply.replyMsg.length > 255) {
+                    setReplyErrMsg("Cannot exceed more than 255 characters");
+                  } else {
+                    sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
+                  }
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Reply something here"
+                  value={reply.replyMsg}
+                  className="w-full h-[30vh] bg-slate-100 rounded-md px-6 mt-4"
+                  onChange={(e) => {
+                    handleReplyChange(e);
+                  }}
+                />
+                <button type="submit">Save</button>
+              </form>
+
+              <h1 style={{ color: "white" }}>{replyErrMsg}</h1>
+            </div>
+          </>
+        ) : null}
       </>
     );
   }
