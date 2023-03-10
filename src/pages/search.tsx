@@ -33,9 +33,8 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   }, [router.isReady]);
 
   const { q } = router.query;
-  console.log(q);
-
-  const [searchMsg, setSearchMsg] = useState("");
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [searchMsg, setSearchMsg] = useState("Find people here");
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -44,12 +43,14 @@ const Search: NextPage<SearchProps> = ({ users }) => {
   const [usersData, setUsersData] = useState(users);
 
   const onSubmitHandler = async () => {
+    setIsNotFound(false);
     setSearchMsg("");
     const response = await axios.get<SearchProps>("http://localhost:5000/api/v1/users", { params: { q: username } });
     const data = response.data;
 
     if (data.users.length === 0) {
       setSearchMsg("Cannot found user");
+      setIsNotFound(true);
     }
     setUsersData(data.users);
     router.push(`/search?q=${username}`, undefined, { shallow: true });
@@ -82,7 +83,7 @@ const Search: NextPage<SearchProps> = ({ users }) => {
           </button>
         </form>
 
-        {searchMsg ? <div className="text-center mt-4">{searchMsg}</div> : null}
+        {searchMsg ? <div className={`text-center mt-4 ${isNotFound ? "text-red-400" : ""}`}>{searchMsg}</div> : null}
       </div>
 
       <ul className="max-w-3xl mx-auto flex flex-col mt-4 gap-2">
