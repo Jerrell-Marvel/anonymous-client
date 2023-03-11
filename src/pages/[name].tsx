@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Message = {
   id: number;
@@ -70,11 +72,16 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
         });
 
         setMessage("");
+        toast.success("Message sent !", {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     },
 
     onError: (err) => {
-      setSendMsgErr("Something went wrong please try again later");
+      toast.error("Something went wrong !", {
+        position: toast.POSITION.TOP_CENTER,
+      });
     },
   });
 

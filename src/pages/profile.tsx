@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { NextPage } from "next";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Message = {
   id: string;
@@ -104,6 +106,9 @@ const Profile: NextPage = () => {
     },
 
     onSuccess: (data) => {
+      toast.success("Reply sent !", {
+        position: toast.POSITION.TOP_CENTER,
+      });
       console.log(data);
       queryClient.setQueryData<Profile | undefined>(["profile"], (oldProfile) => {
         if (oldProfile) {
@@ -129,13 +134,20 @@ const Profile: NextPage = () => {
     },
 
     onError: (err) => {
-      if (err?.request?.status === 400) {
-        setReplyErrMsg("Can't reply message more than 5 times");
-      } else if (err?.request?.status === 401) {
-        router.push("/login");
-      } else {
-        setReplyErrMsg("Something went wrong please try again later");
+      if (err?.request?.status === 401) {
+        return router.push("/login");
       }
+
+      let errorMsg = "";
+      if (err?.request?.status === 400) {
+        // setReplyerrMsg("Can't reply message more than 5 times");
+        errorMsg = "Can't reply message more than 5 times";
+      } else {
+        errorMsg = "Something went wrong please try again later";
+      }
+      toast.error(errorMsg, {
+        position: toast.POSITION.TOP_CENTER,
+      });
     },
   });
 
