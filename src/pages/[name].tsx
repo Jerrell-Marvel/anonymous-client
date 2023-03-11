@@ -90,44 +90,58 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
 
   return (
     <>
-      <div>
-        <p>{profile?.user?.username}</p>
-        <p>{profile?.user?.id}</p>
+      <div className="flex flex-col">
+        <div className="p-6 rounded-md bg-white">
+          <h2 className="text-5xl font-bold mb-4 text-center">{profile?.user?.username}</h2>
+          <p className="text-center">Lorem ipsum dolor sit amet.</p>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (profile.user) {
-              sendMessage(profile.user.id);
-            }
-          }}
-        >
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => {
-              messageOnChangeHandler(e);
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (profile.user) {
+                sendMessage(profile.user.id);
+              }
             }}
-          />
-          <button type="submit">SEND</button>
-        </form>
+            className="p-6 rounded-md bg-white flex flex-col items-center"
+          >
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => {
+                messageOnChangeHandler(e);
+              }}
+              className="bg-slate-200 px-6 h-28 w-full rounded-md focus:ring-sky-500 focus:ring-1 outline-none"
+              placeholder="Send anonymous message"
+            />
+            <div className="flex justify-between mt-4 w-full">
+              <span className="text-slate-600 text-sm">your message is anonymous</span>
+              <button
+                type="submit"
+                className="bg-blue-400 px-6 py-1 rounded-full text-white"
+              >
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
 
         <span>{sendMsgErr}</span>
-        <div>
+        <div className="flex-col gap-4 flex mt-4">
           {profile?.user?.messages.map((message) => {
             return (
-              <div key={message.id}>
-                <h2 key={message.id}>{message.message}</h2>
+              <div
+                key={message.id}
+                className="bg-white p-6 rounded-md"
+              >
+                <div
+                  key={message.id}
+                  className="border-l-2 border-slate-400 pl-3"
+                >
+                  {message.message}
+                </div>
 
                 {message.replies.map((reply) => {
-                  return (
-                    <div
-                      key={reply.reply_id}
-                      style={{ marginLeft: "10px", display: "flex", gap: "20px" }}
-                    >
-                      <h3>{reply.reply}</h3>
-                    </div>
-                  );
+                  return <div key={reply.reply_id}>{reply.reply}</div>;
                 })}
               </div>
             );

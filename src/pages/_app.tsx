@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <QueryClientProvider client={queryClient}>
         {/* <Navbar /> */}
-        <div className="min-h-screen bg-slate-200 pt-6">
+        <div className="min-h-screen bg-slate-200 py-6">
           <div className="max-w-3xl mx-auto">
             <Component {...pageProps} />
           </div>
