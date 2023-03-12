@@ -6,6 +6,7 @@ import Link from "next/link";
 import { NextPage } from "next";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
 
 type Message = {
   id: string;
@@ -167,7 +168,11 @@ const Profile: NextPage = () => {
   };
 
   if (isLoading) {
-    return <div>LOADING ....</div>;
+    return (
+      <div>
+        <LoadingSpinner color="black" />
+      </div>
+    );
   }
 
   if (errMsg) {
@@ -259,10 +264,24 @@ const Profile: NextPage = () => {
                     handleReplyChange(e);
                   }}
                 />
-                <button type="submit">Save</button>
+                <div className="w-full flex justify-end">
+                  <button
+                    type="submit"
+                    className="btn bg-blue-400 text-white 
+                    mt-2"
+                  >
+                    {isReplyLoading ? (
+                      <LoadingSpinner
+                        height="h-6"
+                        width="w-6"
+                        color="white"
+                      />
+                    ) : (
+                      "Save"
+                    )}
+                  </button>
+                </div>
               </form>
-
-              <h1 style={{ color: "white" }}>{replyErrMsg}</h1>
             </div>
           </>
         ) : null}

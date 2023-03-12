@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
 import axios, { AxiosError } from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
@@ -41,7 +42,7 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
   const [profile, setProfile] = useState<Profile>(data);
   const [sendMsgErr, setSendMsgErr] = useState("");
 
-  const { mutate: sendMessage } = useMutation<SendMessageApiResponse, AxiosError, string>({
+  const { mutate: sendMessage, isLoading: isSendMessageLoading } = useMutation<SendMessageApiResponse, AxiosError, string>({
     mutationFn: async (id) => {
       const response = await axios.post<SendMessageApiResponse>(`http://localhost:5000/api/v1/message/${id}`, { message });
       const data = response.data;
@@ -124,9 +125,9 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
               <span className="text-slate-600 text-sm">your message is anonymous</span>
               <button
                 type="submit"
-                className="bg-blue-400 px-6 py-1 rounded-full text-white"
+                className="bg-blue-400 btn"
               >
-                Send
+                {isSendMessageLoading ? <LoadingSpinner color="white" /> : "Send"}
               </button>
             </div>
           </form>
