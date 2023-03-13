@@ -75,7 +75,7 @@ const Search: NextPage<SearchProps> = ({ users }) => {
           />
           <button
             type="submit"
-            className="bg-orange-400 px-5 py-1 rounded-full text-white"
+            className="btn bg-blue-400"
           >
             submit
           </button>

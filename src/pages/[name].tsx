@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -41,6 +41,12 @@ type SendMessageApiResponse = {
 const MessagePage: NextPage<MessagePageProps> = (data) => {
   const [profile, setProfile] = useState<Profile>(data);
   const [sendMsgErr, setSendMsgErr] = useState("");
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const { mutate: sendMessage, isLoading: isSendMessageLoading } = useMutation<SendMessageApiResponse, AxiosError, string>({
     mutationFn: async (id) => {
@@ -125,6 +131,7 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
               }}
               className="bg-slate-200 px-6 h-28 w-full rounded-md focus:ring-sky-500 focus:ring-1 outline-none"
               placeholder="Send anonymous message"
+              ref={inputRef}
             />
             <div className="flex justify-between mt-4 w-full">
               <span className="text-slate-600 text-sm">your message is anonymous</span>

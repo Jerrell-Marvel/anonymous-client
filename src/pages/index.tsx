@@ -25,7 +25,20 @@ export default function Home() {
         />
       </Head>
       <main>
-        <h1 className="text-4xl">HOME PAGE</h1>
+        <div className="min-h-screen flex p-6 justify-center flex-col items-center text-center gap-8">
+          <div>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl">Welcome to</h2>
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold">Anonymous</h1>
+          </div>
+
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae rem quidem iste impedit vel voluptas repudiandae similique, optio totam? Adipisci minus veniam modi rem aliquid!</p>
+          <Link
+            href="/profile"
+            className="btn bg-blue-400 px-6 py-2"
+          >
+            Get started
+          </Link>
+        </div>
       </main>
     </>
   );

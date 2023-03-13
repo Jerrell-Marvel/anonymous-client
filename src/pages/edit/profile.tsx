@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 type ProfileType = {
