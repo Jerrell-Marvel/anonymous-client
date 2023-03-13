@@ -106,6 +106,11 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if (!message) {
+                return toast.error("Message can't be empty", {
+                  position: toast.POSITION.TOP_CENTER,
+                });
+              }
               if (profile.user) {
                 sendMessage(profile.user.id);
               }

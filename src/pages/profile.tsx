@@ -250,6 +250,10 @@ const Profile: NextPage = () => {
                   e.preventDefault();
                   if (reply.replyMsg.length > 255) {
                     setReplyErrMsg("Cannot exceed more than 255 characters");
+                  } else if (!reply.replyMsg) {
+                    toast.error("Reply message can't be empty", {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                   } else {
                     sendReply({ messageId: reply.messageId, replyMsg: reply.replyMsg });
                   }
