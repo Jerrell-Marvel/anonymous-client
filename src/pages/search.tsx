@@ -19,17 +19,15 @@ const Search: NextPage<SearchProps> = ({ users }) => {
 
   const [username, setUsername] = useState("");
   useEffect(() => {
-    // if (router.isReady) {
-    //   const { q } = router.query;
-    //   if (q) {
-    //     setUsername(q as string);
-    //     if (usersData.length === 0) {
-    //       setSearchMsg("Cannot found user");
-    //     }
-    //   } else if (!q) {
-    //     setSearchMsg("Find people here");
-    //   }
-    // }
+    if (router.isReady) {
+      const { q } = router.query;
+      if (q) {
+        setUsername(q as string);
+        if (usersData.length === 0) {
+          setSearchMsg("Cannot found user");
+        }
+      }
+    }
   }, [router.isReady]);
 
   const { q } = router.query;
