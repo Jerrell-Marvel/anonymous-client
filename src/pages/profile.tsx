@@ -190,15 +190,22 @@ const Profile: NextPage = () => {
   if (!isError) {
     return (
       <>
-        <div className="bg-white p-6 text-center rounded-md">
+        <div className="bg-white p-6 text-center rounded-md flex flex-col items-center gap-2">
           <h2 className="text-5xl font-bold">{profile?.user.username}</h2>
-          <Link href="/edit/profile">edit profile</Link>
+
           <p className="text-2xl">Share your link</p>
           <Link
             href={`/${profile?.user.username}`}
             className="text-3xl text-red-500"
           >
             {"https://domain/" + profile?.user.username}
+          </Link>
+
+          <Link
+            href="/edit/profile"
+            className="px-6 py-1 w-fit text-white rounded-full block bg-blue-400"
+          >
+            edit profile
           </Link>
         </div>
 

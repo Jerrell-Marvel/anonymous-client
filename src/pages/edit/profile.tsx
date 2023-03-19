@@ -1,8 +1,10 @@
+import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
 import axios, { AxiosError } from "axios";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 type ProfileType = {
   user: {
@@ -60,7 +62,11 @@ const EditProfile: NextPage = () => {
     retry: false,
   });
 
-  const { data: updateResponse, mutate: updateProfile } = useMutation<any, AxiosError>({
+  const {
+    data: updateResponse,
+    mutate: updateProfile,
+    isLoading: isUpdateLoading,
+  } = useMutation<any, AxiosError>({
     mutationFn: async () => {
       const response = await axios.post<{ success: boolean }>(
         "http://localhost:5000/api/v1/profile",
@@ -74,6 +80,9 @@ const EditProfile: NextPage = () => {
     },
 
     onSuccess: () => {
+      toast.success("Profile updated", {
+        position: toast.POSITION.TOP_CENTER,
+      });
       router.push("/profile");
     },
 
@@ -102,7 +111,7 @@ const EditProfile: NextPage = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   if (getProfileErrMsg) {
@@ -112,27 +121,45 @@ const EditProfile: NextPage = () => {
   if (!isError) {
     return (
       <>
-        <div>
-          <div>
-            <input
-              type="text"
-              placeholder="name"
-              value={controlledProfile.username}
-              onChange={(e) => {
-                onChangeHandler(e);
-              }}
-            />
-            <button
-              onClick={() => {
-                updateProfile();
-                console.log(profile);
-              }}
-            >
-              save
-            </button>
-          </div>
+        <div className="">
+          <h2 className="uppercase text-2xl sm:text-4xl mb-4">profile settings</h2>
+          <form
+            className="bg-white p-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateProfile();
+            }}
+          >
+            <div className="flex flex-col">
+              <label
+                htmlFor="name"
+                className="text-slate-700"
+              >
+                Change name
+              </label>
+              <input
+                type="text"
+                placeholder="name"
+                value={controlledProfile.username}
+                onChange={(e) => {
+                  onChangeHandler(e);
+                }}
+                id="name"
+                className="bg-slate-200 rounded-sm px-2 py-1 mt-2"
+              />
+            </div>
 
-          <h1>{updateProfileErrMsg}</h1>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="btn bg-blue-400 mt-4"
+              >
+                {isUpdateLoading ? <LoadingSpinner color="white" /> : "save"}
+              </button>
+            </div>
+          </form>
+
+          {/* <h1>{updateProfileErrMsg}</h1> */}
         </div>
       </>
     );
