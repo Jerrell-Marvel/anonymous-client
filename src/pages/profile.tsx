@@ -1,5 +1,5 @@
 import { ReactEventHandler, useEffect, useRef, useState } from "react";
-import axios, { Axios, AxiosError } from "axios";
+import axios, { Axios, AxiosError, AxiosResponse } from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
 
 type Message = {
-  id: string;
+  id: number;
   message: string;
   replies: Reply[];
 };
@@ -28,13 +28,13 @@ type Profile = {
 };
 
 type ReplyState = {
-  messageId: string;
+  messageId: number;
   message: string;
   replyMsg: string;
 };
 
 type MutationFnParams = {
-  messageId: string;
+  messageId: number;
   replyMsg: string;
 };
 
@@ -49,6 +49,11 @@ type ReplyApiResponse = {
   };
 };
 
+type DeleteApiResponse = {
+  success: boolean;
+  deletedCount: number;
+};
+
 const Profile: NextPage = () => {
   const [hasUsername, setHasUsername] = useState(true);
   const router = useRouter();
@@ -61,6 +66,8 @@ const Profile: NextPage = () => {
 
   const [replyErrMsg, setReplyErrMsg] = useState("");
   const [errMsg, setErrMsg] = useState("");
+
+  const [deleteId, setDeleteId] = useState<number>();
 
   const {
     data: profile,
@@ -77,7 +84,6 @@ const Profile: NextPage = () => {
       return data;
     },
     onSuccess: (profile) => {
-      console.log(profile);
       if (!profile?.user.username) {
         setHasUsername(false);
       }
@@ -116,7 +122,7 @@ const Profile: NextPage = () => {
           const messages = oldProfile.user.messages;
           console.log(messages, data.reply.message_id);
           const msgIndex = messages.findIndex((message) => {
-            return message.id == data.reply.message_id;
+            return message.id.toString() === data.reply.message_id;
           });
           console.log(msgIndex);
           const temp = messages[msgIndex];
@@ -147,6 +153,50 @@ const Profile: NextPage = () => {
         errorMsg = "Something went wrong please try again later";
       }
       toast.error(errorMsg, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    },
+  });
+
+  const {
+    data: deleteResponse,
+    isLoading: isDeleteLoading,
+    mutate: deleteMessage,
+  } = useMutation<DeleteApiResponse, AxiosError, number>({
+    mutationFn: async (id) => {
+      const response = await axios.delete<DeleteApiResponse>(`http://localhost:5000/api/v1/message/${id}`, { withCredentials: true });
+      const data = response.data;
+      return data;
+    },
+    onSuccess: (data, messageId) => {
+      queryClient.setQueryData<Profile | undefined>(["profile"], (prevProfile) => {
+        if (prevProfile) {
+          const tempMessages = prevProfile.user.messages.filter((message) => {
+            return message.id !== messageId;
+          });
+
+          const newProfile = {
+            user: {
+              ...prevProfile.user,
+              messages: tempMessages,
+            },
+          };
+
+          // console.log(newProfile);
+          return newProfile;
+        }
+
+        return undefined; // By default also returns undefined
+      });
+
+      // setDeleteId("");
+      toast.success("Message deleted", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    },
+
+    onError: (err) => {
+      toast.error("Something went wrong, please try again later", {
         position: toast.POSITION.TOP_CENTER,
       });
     },
@@ -233,6 +283,15 @@ const Profile: NextPage = () => {
                   }}
                 >
                   Reply
+                </button>
+
+                <button
+                  onClick={(e) => {
+                    // setDeleteId(message.id);
+                    deleteMessage(message.id);
+                  }}
+                >
+                  Delete
                 </button>
               </div>
             );
