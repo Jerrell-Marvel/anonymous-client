@@ -67,7 +67,7 @@ const Profile: NextPage = () => {
   const [replyErrMsg, setReplyErrMsg] = useState("");
   const [errMsg, setErrMsg] = useState("");
 
-  const [deleteId, setDeleteId] = useState<number>();
+  const [willDeleteMessage, setWillDeleteMessage] = useState<{ id: number; message: string }>();
 
   const {
     data: profile,
@@ -185,11 +185,10 @@ const Profile: NextPage = () => {
           // console.log(newProfile);
           return newProfile;
         }
-
         return undefined; // By default also returns undefined
       });
 
-      // setDeleteId("");
+      setWillDeleteMessage(undefined);
       toast.success("Message deleted", {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -287,8 +286,8 @@ const Profile: NextPage = () => {
 
                 <button
                   onClick={(e) => {
-                    // setDeleteId(message.id);
-                    deleteMessage(message.id);
+                    setWillDeleteMessage({ id: message.id, message: message.message });
+                    // deleteMessage(message.id);
                   }}
                 >
                   Delete
@@ -352,6 +351,45 @@ const Profile: NextPage = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </>
+        ) : null}
+
+        {willDeleteMessage ? (
+          <>
+            <div
+              onClick={(e) => {
+                setWillDeleteMessage(undefined);
+              }}
+              ref={backdropRef}
+              className="top-0 left-0 h-screen w-full fixed bg-slate-500 opacity-50"
+            ></div>
+
+            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 pb-6 w-2/3 max-w-md">
+              <h4 className="font-bold px-6 my-4">Delete confirmation</h4>
+
+              <div className="px-6 py-4 border-y-[1px] border-slate-200 my-2">
+                <div className="border-l-2 border-slate-400 pl-3">{willDeleteMessage.message}</div>
+                <p>Are you sure to delete this message ? </p>
+              </div>
+              <div className="flex justify-end px-6 gap-2">
+                <button
+                  className="bg-slate-500 text-white px-3 py-1 rounded-md"
+                  onClick={() => {
+                    setWillDeleteMessage(undefined);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-red-500 text-white px-6 py-2 rounded-md"
+                  onClick={() => {
+                    deleteMessage(willDeleteMessage.id);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </>
         ) : null}
