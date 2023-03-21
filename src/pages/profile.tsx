@@ -7,6 +7,7 @@ import { NextPage } from "next";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
+import SocialMediaIcons from "@/components/Icon/SocialMediaIcons";
 
 type Message = {
   id: number;
@@ -23,6 +24,10 @@ type Profile = {
   user: {
     id: string;
     username: string;
+    instagram: string | null;
+    twitter: string | null;
+    createdAt: string;
+    updatedAt: string;
     messages: Message[];
   };
 };
@@ -250,12 +255,18 @@ const Profile: NextPage = () => {
             {"https://domain/" + profile?.user.username}
           </Link>
 
-          <Link
-            href="/edit/profile"
-            className="px-6 py-1 w-fit text-white rounded-full block bg-blue-400"
-          >
-            edit profile
-          </Link>
+          <div className="flex gap-2 flex-wrap justify-center">
+            <Link
+              href="/edit/profile"
+              className="px-6 py-1 w-fit text-white rounded-full block bg-blue-400"
+            >
+              edit profile
+            </Link>
+            <SocialMediaIcons
+              instagram={profile?.user.instagram}
+              twitter={profile?.user.twitter}
+            />
+          </div>
         </div>
 
         <div className="flex-col gap-4 flex mt-4">
