@@ -265,32 +265,72 @@ const Profile: NextPage = () => {
                 key={message.id}
                 className="bg-white p-6 rounded-md"
               >
-                <div
-                  key={message.id}
-                  className="border-l-2 border-slate-400 pl-3"
-                >
-                  {message.message}
+                <div className="flex justify-between">
+                  <div
+                    key={message.id}
+                    className="border-l-2 border-slate-400 pl-3"
+                  >
+                    {message.message}
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      setWillDeleteMessage({ id: message.id, message: message.message });
+                      // deleteMessage(message.id);
+                    }}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      fill="black"
+                      className="scale-75"
+                    >
+                      <path d="M9 3h6v-1.75c0-.066-.026-.13-.073-.177-.047-.047-.111-.073-.177-.073h-5.5c-.066 0-.13.026-.177.073-.047.047-.073.111-.073.177v1.75zm11 1h-16v18c0 .552.448 1 1 1h14c.552 0 1-.448 1-1v-18zm-10 3.5c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm5 0c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm8-4.5v1h-2v18c0 1.105-.895 2-2 2h-14c-1.105 0-2-.895-2-2v-18h-2v-1h7v-2c0-.552.448-1 1-1h6c.552 0 1 .448 1 1v2h7z" />
+                    </svg>
+                  </button>
                 </div>
 
-                {message.replies.map((reply) => {
-                  return <div key={reply.reply_id}>{reply.reply}</div>;
-                })}
+                <div className="my-2">
+                  {message.replies.map((reply) => {
+                    return (
+                      <div
+                        key={reply.reply_id}
+                        className=""
+                      >
+                        {reply.reply}
+                      </div>
+                    );
+                  })}
+                </div>
 
                 <button
                   onClick={(e) => {
                     handleReplyClick(e, { messageId: message.id, message: message.message, replyMsg: "" });
                   }}
+                  className="text-slate-700 text-sm"
                 >
+                  {/* <svg
+                    aria-label="Comment"
+                    color="gray"
+                    fill="black"
+                    height="24"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <title>Comment</title>
+                    <path
+                      d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    ></path>
+                  </svg> */}
                   Reply
-                </button>
-
-                <button
-                  onClick={(e) => {
-                    setWillDeleteMessage({ id: message.id, message: message.message });
-                    // deleteMessage(message.id);
-                  }}
-                >
-                  Delete
                 </button>
               </div>
             );
