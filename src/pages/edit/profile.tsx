@@ -86,6 +86,8 @@ const EditProfile: NextPage = () => {
         "http://localhost:5000/api/v1/profile",
         {
           username: controlledProfile.username,
+          instagram: controlledProfile.instagram,
+          twitter: controlledProfile.twitter,
         },
         { withCredentials: true }
       );
@@ -120,8 +122,9 @@ const EditProfile: NextPage = () => {
     }
 
     setControlledProfile({
-      [e.target.name]: e.target.value,
       ...controlledProfile,
+
+      [e.target.name]: e.target.value,
     });
   };
 
