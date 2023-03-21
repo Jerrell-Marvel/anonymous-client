@@ -11,6 +11,8 @@ const SocialMediaIcons = ({ instagram, twitter }: SocialMediaIconsProps) => {
         <a
           className="p-2 rounded-full bg-slate-300 hover:bg-blue-400 cursor-pointer"
           href={`https://www.instagram.com/${instagram}`}
+          target="_blank"
+          rel="noreferrer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,6 +30,8 @@ const SocialMediaIcons = ({ instagram, twitter }: SocialMediaIconsProps) => {
         <a
           className="p-2 rounded-full bg-slate-300 hover:bg-blue-400 cursor-pointer"
           href={`https://twitter.com/${twitter}`}
+          target="_blank"
+          rel="noreferrer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
