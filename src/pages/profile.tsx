@@ -268,7 +268,7 @@ const Profile: NextPage = () => {
                 <div className="flex justify-between">
                   <div
                     key={message.id}
-                    className="border-l-2 border-slate-400 pl-3"
+                    className="border-l-2 border-slate-400 pl-3 text-lg"
                   >
                     {message.message}
                   </div>
@@ -293,24 +293,11 @@ const Profile: NextPage = () => {
                   </button>
                 </div>
 
-                <div className="my-2">
-                  {message.replies.map((reply) => {
-                    return (
-                      <div
-                        key={reply.reply_id}
-                        className=""
-                      >
-                        {reply.reply}
-                      </div>
-                    );
-                  })}
-                </div>
-
                 <button
                   onClick={(e) => {
                     handleReplyClick(e, { messageId: message.id, message: message.message, replyMsg: "" });
                   }}
-                  className="text-slate-700 text-sm"
+                  className="my-2 flex gap-2"
                 >
                   {/* <svg
                     aria-label="Comment"
@@ -330,8 +317,32 @@ const Profile: NextPage = () => {
                       strokeWidth="2"
                     ></path>
                   </svg> */}
-                  Reply
+                  {/* <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    className="-rotate-[140deg] scale-75"
+                    fill="gray"
+                  >
+                    <path d="M17.026 22.957c10.957-11.421-2.326-20.865-10.384-13.309l2.464 2.352h-9.106v-8.947l2.232 2.229c14.794-13.203 31.51 7.051 14.794 17.675z" />
+                  </svg> */}
+
+                  <span className="">Reply</span>
                 </button>
+
+                <div className="my-2 flex flex-col gap-2">
+                  {message.replies.map((reply) => {
+                    return (
+                      <div
+                        key={reply.reply_id}
+                        className="bg-slate-200 p-2 rounded-md text-slate-700"
+                      >
+                        {reply.reply}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             );
           })}
@@ -347,7 +358,7 @@ const Profile: NextPage = () => {
               className="top-0 left-0 h-screen w-full fixed bg-slate-500 opacity-50"
             ></div>
 
-            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 p-6 w-1/2">
+            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 p-6 w-full sm:w-2/3 max-w-md">
               <div className="border-l-2 border-slate-400 pl-3">{reply.message}</div>
 
               <form
@@ -405,12 +416,12 @@ const Profile: NextPage = () => {
               className="top-0 left-0 h-screen w-full fixed bg-slate-500 opacity-50"
             ></div>
 
-            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 pb-6 w-2/3 max-w-md">
+            <div className="top-1/2 left-1/2 fixed bg-white rounded-md -translate-x-1/2 -translate-y-1/2 pb-6  w-full sm:w-2/3 max-w-md">
               <h4 className="font-bold px-6 my-4">Delete confirmation</h4>
 
               <div className="px-6 py-4 border-y-[1px] border-slate-200 my-2">
                 <div className="border-l-2 border-slate-400 pl-3">{willDeleteMessage.message}</div>
-                <p>Are you sure to delete this message ? </p>
+                <p className="mt-4">Are you sure to delete this message ? </p>
               </div>
               <div className="flex justify-end px-6 gap-2">
                 <button
