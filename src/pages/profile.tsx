@@ -90,7 +90,7 @@ const Profile: NextPage = () => {
     },
     onSuccess: (profile) => {
       if (!profile?.user.username) {
-        setHasUsername(false);
+        router.push("/edit/profile");
       }
     },
 
@@ -223,8 +223,12 @@ const Profile: NextPage = () => {
 
   if (isLoading) {
     return (
-      <div>
-        <LoadingSpinner color="black" />
+      <div className="flex items-center justify-center h-screen">
+        <LoadingSpinner
+          color="black"
+          height="h-10"
+          width="w-10"
+        />
       </div>
     );
   }
@@ -232,16 +236,21 @@ const Profile: NextPage = () => {
   if (errMsg) {
     return <div>{errMsg}</div>;
   }
-  if (!hasUsername) {
-    return (
-      <div>
-        <span>To generate your link please update your profile</span>
-        <Link href="/edit/profile">edit profile</Link>
-      </div>
-    );
-  }
+  // if (!hasUsername) {
+  //   return (
+  //     <div className="bg-white p-6 text-center rounded-md flex flex-col items-center gap-2">
+  //       <span>To generate your link please update your profile</span>
+  //       <Link
+  //         href="/edit/profile"
+  //         className="px-6 py-1 w-fit text-white rounded-full block bg-blue-400"
+  //       >
+  //         edit profile
+  //       </Link>
+  //     </div>
+  //   );
+  // }
 
-  if (!isError) {
+  if (!isError && profile?.user.username) {
     return (
       <>
         <div className="bg-white p-6 text-center rounded-md flex flex-col items-center gap-2">
@@ -290,7 +299,7 @@ const Profile: NextPage = () => {
                       // deleteMessage(message.id);
                     }}
                   >
-                    <svg
+                    {/* <svg
                       width="24"
                       height="24"
                       xmlns="http://www.w3.org/2000/svg"
@@ -300,6 +309,21 @@ const Profile: NextPage = () => {
                       className="scale-75"
                     >
                       <path d="M9 3h6v-1.75c0-.066-.026-.13-.073-.177-.047-.047-.111-.073-.177-.073h-5.5c-.066 0-.13.026-.177.073-.047.047-.073.111-.073.177v1.75zm11 1h-16v18c0 .552.448 1 1 1h14c.552 0 1-.448 1-1v-18zm-10 3.5c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm5 0c0-.276-.224-.5-.5-.5s-.5.224-.5.5v12c0 .276.224.5.5.5s.5-.224.5-.5v-12zm8-4.5v1h-2v18c0 1.105-.895 2-2 2h-14c-1.105 0-2-.895-2-2v-18h-2v-1h7v-2c0-.552.448-1 1-1h6c.552 0 1 .448 1 1v2h7z" />
+                    </svg> */}
+                    <svg
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      strokeLinejoin="round"
+                      strokeMiterlimit="2"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="lightgray"
+                      width="24"
+                    >
+                      <path
+                        d="m20.015 6.506h-16v14.423c0 .591.448 1.071 1 1.071h14c.552 0 1-.48 1-1.071 0-3.905 0-14.423 0-14.423zm-5.75 2.494c.414 0 .75.336.75.75v8.5c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-8.5c0-.414.336-.75.75-.75zm-4.5 0c.414 0 .75.336.75.75v8.5c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-8.5c0-.414.336-.75.75-.75zm-.75-5v-1c0-.535.474-1 1-1h4c.526 0 1 .465 1 1v1h5.254c.412 0 .746.335.746.747s-.334.747-.746.747h-16.507c-.413 0-.747-.335-.747-.747s.334-.747.747-.747zm4.5 0v-.5h-3v.5z"
+                        fillRule="nonzero"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -308,7 +332,7 @@ const Profile: NextPage = () => {
                   onClick={(e) => {
                     handleReplyClick(e, { messageId: message.id, message: message.message, replyMsg: "" });
                   }}
-                  className="my-2 flex gap-2"
+                  className="mt-2 flex gap-2"
                 >
                   {/* <svg
                     aria-label="Comment"
@@ -342,18 +366,20 @@ const Profile: NextPage = () => {
                   <span className="">Reply</span>
                 </button>
 
-                <div className="my-2 flex flex-col gap-2">
-                  {message.replies.map((reply) => {
-                    return (
-                      <div
-                        key={reply.reply_id}
-                        className="bg-slate-200 p-2 rounded-md text-slate-700"
-                      >
-                        {reply.reply}
-                      </div>
-                    );
-                  })}
-                </div>
+                {message.replies.length !== 0 ? (
+                  <div className="my-2 flex flex-col gap-2">
+                    {message.replies.map((reply) => {
+                      return (
+                        <div
+                          key={reply.reply_id}
+                          className="bg-slate-100 p-2 rounded-md text-slate-700"
+                        >
+                          {reply.reply}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
             );
           })}

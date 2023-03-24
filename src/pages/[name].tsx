@@ -160,18 +160,20 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
                   {message.message}
                 </div>
 
-                <div className="my-2 flex flex-col gap-2">
-                  {message.replies.map((reply) => {
-                    return (
-                      <div
-                        key={reply.reply_id}
-                        className="bg-slate-100 p-2 rounded-md text-slate-700"
-                      >
-                        {reply.reply}
-                      </div>
-                    );
-                  })}
-                </div>
+                {message.replies.length !== 0 ? (
+                  <div className="my-2 flex flex-col gap-2">
+                    {message.replies.map((reply) => {
+                      return (
+                        <div
+                          key={reply.reply_id}
+                          className="bg-slate-100 p-2 rounded-md text-slate-700"
+                        >
+                          {reply.reply}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
             );
           })}

@@ -129,7 +129,15 @@ const EditProfile: NextPage = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingSpinner
+          color="black"
+          height="h-10"
+          width="w-10"
+        />
+      </div>
+    );
   }
 
   if (getProfileErrMsg) {
@@ -140,7 +148,7 @@ const EditProfile: NextPage = () => {
     return (
       <>
         <div className="">
-          <h2 className="uppercase text-2xl sm:text-4xl mb-4">profile settings</h2>
+          <h2 className="uppercase text-2xl sm:text-4xl my-4">profile settings</h2>
           <form
             className="bg-white p-6"
             onSubmit={(e) => {
