@@ -278,6 +278,8 @@ const Profile: NextPage = () => {
           </div>
         </div>
 
+        {profile.user.messages.length === 0 ? <div className="mt-4 text-slate-400 text-center font-bold">You currently have no message</div> : null}
+
         <div className="flex-col gap-4 flex mt-4">
           {profile?.user.messages.map((message) => {
             return (
