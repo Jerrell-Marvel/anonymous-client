@@ -14,9 +14,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <ToastContainer autoClose={2000} />
       <QueryClientProvider client={queryClient}>
-        {/* <Navbar /> */}
+        <Navbar />
 
-        <div className="max-w-3xl mx-auto min-h-screen">
+        <div className="max-w-3xl mx-auto min-h-screen pt-14">
           <Component {...pageProps} />
         </div>
 
