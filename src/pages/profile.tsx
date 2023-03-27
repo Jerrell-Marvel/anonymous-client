@@ -29,6 +29,7 @@ type Profile = {
     createdAt: string;
     updatedAt: string;
     messages: Message[];
+    bio: string | null;
   };
 };
 
@@ -254,14 +255,15 @@ const Profile: NextPage = () => {
     return (
       <>
         <div className="bg-white p-6 text-center rounded-md flex flex-col items-center gap-2">
-          <h2 className="text-5xl font-bold">{profile?.user.username}</h2>
+          <h2 className="text-5xl font-bold">{profile.user.username}</h2>
+          <p>{profile.user.bio}</p>
 
           <p className="text-2xl">Share your link</p>
           <Link
             href={`/${profile?.user.username}`}
             className="text-3xl text-red-500"
           >
-            {"https://domain/" + profile?.user.username}
+            {"https://domain/" + profile.user.username}
           </Link>
 
           <div className="flex gap-2 flex-wrap justify-center">

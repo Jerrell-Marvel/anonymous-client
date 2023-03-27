@@ -1,3 +1,4 @@
+import SocialMediaIcons from "@/components/Icon/SocialMediaIcons";
 import LoadingSpinner from "@/components/Spinner/LoadingSpinner";
 import axios, { AxiosError } from "axios";
 import { GetServerSideProps, NextPage } from "next";
@@ -24,6 +25,9 @@ type Profile = {
     id: string;
     username: string;
     messages: Message[];
+    bio: string | null;
+    instagram: string | null;
+    twitter: string | null;
   } | null;
 };
 
@@ -107,7 +111,15 @@ const MessagePage: NextPage<MessagePageProps> = (data) => {
       <div className="flex flex-col">
         <div className="p-6 rounded-md bg-white">
           <h2 className="text-5xl font-bold mb-4 text-center">{profile?.user?.username}</h2>
-          <p className="text-center">Lorem ipsum dolor sit amet.</p>
+
+          <p className="text-center">{profile.user.bio}</p>
+
+          <div className="flex justify-center mt-2">
+            <SocialMediaIcons
+              instagram={profile.user.instagram}
+              twitter={profile.user.twitter}
+            />
+          </div>
 
           <form
             onSubmit={(e) => {
