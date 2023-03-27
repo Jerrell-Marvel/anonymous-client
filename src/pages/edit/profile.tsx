@@ -14,10 +14,11 @@ type ProfileType = {
     updatedAt: string;
     instagram: string | null;
     twitter: string | null;
+    bio: string | null;
   };
 };
 
-type ProfileState = { username: string; instagram: string; twitter: string };
+type ProfileState = { username: string; instagram: string; twitter: string; bio: string };
 
 const EditProfile: NextPage = () => {
   const a: ProfileState = {} as ProfileState;
@@ -34,6 +35,7 @@ const EditProfile: NextPage = () => {
     username: "",
     instagram: "",
     twitter: "",
+    bio: "",
   });
 
   const {
@@ -51,12 +53,13 @@ const EditProfile: NextPage = () => {
       console.log(data);
       // setProfile(data);
 
-      const { username, instagram, twitter } = data.user;
+      const { username, instagram, twitter, bio } = data.user;
 
       setControlledProfile({
         username: username || "",
         instagram: instagram || "",
         twitter: twitter || "",
+        bio: bio || "",
       });
 
       if (!data?.user.username) {
@@ -88,6 +91,7 @@ const EditProfile: NextPage = () => {
           username: controlledProfile.username,
           instagram: controlledProfile.instagram,
           twitter: controlledProfile.twitter,
+          bio: controlledProfile.bio,
         },
         { withCredentials: true }
       );
@@ -213,6 +217,26 @@ const EditProfile: NextPage = () => {
                   }}
                   id="twitter"
                   name="twitter"
+                  className="bg-slate-200 rounded-sm px-2 py-1"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label
+                  htmlFor="bio"
+                  className="text-slate-700"
+                >
+                  Twitter
+                </label>
+                <input
+                  type="text"
+                  placeholder="bio"
+                  value={controlledProfile.bio}
+                  onChange={(e) => {
+                    onChangeHandler(e);
+                  }}
+                  id="bio"
+                  name="bio"
                   className="bg-slate-200 rounded-sm px-2 py-1"
                 />
               </div>
